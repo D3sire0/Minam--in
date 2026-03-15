@@ -10,12 +10,11 @@
         body {
             margin: 0; padding: 0;
             background: linear-gradient(180deg, #fff0f3 0%, #f8bbd0 100%);
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden; display: flex; flex-direction: column;
             align-items: center; height: 100vh; justify-content: flex-end;
         }
 
-        /* Arka Plan Süzülen Küçük Kalpler */
         .bg-heart {
             position: absolute; color: rgba(255, 77, 109, 0.2);
             pointer-events: none; z-index: 1;
@@ -52,13 +51,14 @@
             position: relative; box-shadow: 0 15px 40px rgba(255, 77, 109, 0.3);
         }
 
-        #text { font-size: 1.15rem; color: #444; min-height: 70px; text-align: center; margin-bottom: 45px; }
+        #text { font-size: 1.15rem; color: #444; min-height: 70px; text-align: center; margin-bottom: 45px; font-weight: 500; }
 
         #next-btn {
             background: var(--main-pink); color: white; border: none; padding: 14px;
             border-radius: 50px; cursor: pointer; position: absolute;
             bottom: 15px; left: 50%; transform: translateX(-50%); width: 80%;
             font-weight: bold; box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+            font-size: 1rem;
         }
 
         #heart-game { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; }
@@ -96,16 +96,6 @@
     bgMusic.loop = true;
     const hitSound = new Audio('tik.mp3');
 
-    // Müzik Çalma Fonksiyonu (Daha Güçlü)
-    function playMusic() {
-        bgMusic.play().then(() => {
-            console.log("Müzik başladı");
-        }).catch(err => {
-            console.log("Müzik hala bekleniyor: ", err);
-        });
-    }
-
-    // Arka Plan Kalp Parçacıkları Oluşturma
     function createBgHearts() {
         for(let i=0; i<15; i++) {
             const h = document.createElement('div');
@@ -120,10 +110,10 @@
     createBgHearts();
 
     const messages = [
-        "Selam canım! 😍 Sonunda buradasın.",
-        "Bu küçük dünyayı tamamen senin için kurdum.",
-        "Şimdi ekranda uçuşan kalpleri yakalaman gerekiyor...",
-        "Hepsini toplayınca çok güzel bir sürpriz seni bekliyor! ❤️"
+        "Selam canim! 😍 Sonunda buradasin.",
+        "Bu kucuk dunyayi tamamen senin icin kurdum.",
+        "Simdi ekranda ucusan kalpleri yakalaman gerekiyor...",
+        "Hepsini toplayinca cok guzel bir surpriz seni bekliyor! ❤️"
     ];
 
     let step = 0; let score = 0;
@@ -146,7 +136,8 @@
         document.getElementById('body').classList.add('shake');
         setTimeout(() => document.getElementById('body').classList.remove('shake'), 400);
         
-        playMusic(); // Her tıklamada çalmayı dene
+        // MÜZİK ÇÖZÜMÜ: Kullanıcı etkileşimiyle başlar
+        bgMusic.play();
 
         step++;
         if (step < messages.length) {
@@ -178,7 +169,6 @@
             document.getElementById('count').innerText = score;
             hitSound.cloneNode(true).play();
             
-            // KALBE TIKLAYINCA PEMBE PATLAMA (Mini Konfeti)
             confetti({
                 particleCount: 20, spread: 50,
                 origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight },
@@ -186,7 +176,7 @@
             });
 
             h.remove();
-            npcImg.src = 'ziplamakarakter.png';
+            npcImg.src = 'ziplamakarakter.png'; // Bu dosyanın GitHub'da olduğundan emin ol!
             npcImg.classList.add('jump');
             setTimeout(() => {
                 npcImg.classList.remove('jump');
@@ -203,7 +193,6 @@
         npcImg.style.width = "260px"; npcImg.style.left = "50%";
         npcImg.style.transform = "translateX(-50%)"; npcImg.style.bottom = "120px";
 
-        // BÜYÜK FİNAL KONFETİSİ (Pembe ve Altın)
         var end = Date.now() + (3 * 1000);
         var colors = ['#ff4d6d', '#ffd700', '#ffffff'];
 
@@ -214,8 +203,8 @@
         }());
 
         document.getElementById('dialog-box').style.display = 'block';
-        writer("Harikaydın sevgilim! ❤️ Bütün kalpleri topladın. Ama bil ki asıl kalbim her saniye senin için atıyor. Seni çok seviyorum!");
-        btn.innerText = "Seni Çok Seviyorum ❤️";
+        writer("Harikaydin sevgilim! ❤️ Butun kalpleri topladin. Ama bil ki asil kalbim her saniye senin icin atiyor. Seni cok seviyorum!");
+        btn.innerText = "Seni Cok Seviyorum ❤️";
         btn.onclick = () => { location.reload(); };
     }
 </script>
