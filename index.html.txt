@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sana Bir Sürprizim Var ❤️</title>
+    <style>
+        body { margin: 0; padding: 0; background: #fff0f3; font-family: 'Arial', sans-serif; overflow: hidden; display: flex; flex-direction: column; align-items: center; height: 100vh; }
+        #game-container { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+        
+        /* NPC Karakter */
+        #npc { width: 200px; z-index: 10; transition: all 0.5s; margin-bottom: -10px; }
+        
+        /* Diyalog Kutusu */
+        #dialog-box { width: 90%; background: white; border: 4px solid #ffb1c1; border-radius: 20px; padding: 20px; box-sizing: border-box; z-index: 20; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        #text { font-size: 18px; color: #444; margin-bottom: 15px; min-height: 50px; text-align: center; }
+        #next-btn { background: #ff4d6d; color: white; border: none; padding: 10px 20px; border-radius: 50px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; }
+
+        /* Oyun Alanı */
+        #heart-game { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; }
+        .heart { position: absolute; font-size: 40px; cursor: pointer; user-select: none; animation: float 3s linear forwards; }
+        @keyframes float { from { transform: translateY(100vh) scale(1); } to { transform: translateY(-10vh) scale(1.5); } }
+        #score { position: absolute; top: 20px; right: 20px; font-size: 24px; color: #ff4d6d; font-weight: bold; display: none; z-index: 30; }
+    </style>
+</head>
+<body>
+
+<div id="score">Kalpler: 0/10</div>
+
+<div id="game-container">
+    <div id="heart-game"></div>
+    
+    <img id="npc" src="karakter.png" alt="NPC"> <div id="dialog-box">
+        <div id="text">...</div>
+        <button id="next-btn">Devam Et ✨</button>
+    </div>
+</div>
+
+<script>
+    const dialogs = [
+        "Selam sevgilim! Sonunda geldin. 😊",
+        "Bu siteyi sadece senin için tasarladım...",
+        "Çünkü seninle olan her anım çok kıymetli.",
+        "Şimdi seninle küçük bir oyun oynayalım mı?",
+        "Ekranda uçuşan kalpleri yakala, bakalım hepsini toplayabilecek misin? ❤️"
+    ];
+
+    let currentStep = 0;
+    let score = 0;
+    const textEl = document.getElementById('text');
+    const nextBtn = document.getElementById('next-btn');
+    const npc = document.getElementById('npc');
+    const dialogBox = document.getElementById('dialog-box');
+    const heartGame = document.getElementById('heart-game');
+    const scoreEl = document.getElementById('score');
+
+    function updateDialog() {
+        if (currentStep < dialogs.length) {
+            textEl.innerText = dialogs[currentStep];
+        } else {
+            startGame();
+        }
+    }
+
+    nextBtn.onclick = () => {
+        currentStep++;
+        updateDialog();
+    };
+
+    function startGame() {
+        dialogBox.style.display = 'none';
+        npc.style.width = '100px'; // Karakteri küçültüp köşeye alalım
+        npc.style.position = 'absolute';
+        npc.style.bottom = '10px';
+        npc.style.left = '10px';
+        heartGame.style.display = 'block';
+        scoreEl.style.display = 'block';
+        
+        const interval = setInterval(() => {
+            if(score >= 10) {
+                clearInterval(interval);
+                finishGame();
+                return;
+            }
+            createHeart();
+        }, 800);
+    }
+
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 80 + 10 + '%';
+        heart.onclick = () => {
+            score++;
+            scoreEl.innerText = `Kalpler: ${score}/10`;
+            heart.remove();
+        };
+        heartGame.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+    }
+
+    function finishGame() {
+        heartGame.innerHTML = "";
+        npc.style.width = "250px";
+        npc.style.left = "50%";
+        npc.style.transform = "translateX(-50%)";
+        dialogBox.style.display = 'block';
+        textEl.innerText = "Harikaydı! Bütün kalpleri topladın. Ama bil ki; asıl kalbim her zaman sende... Seni çok seviyorum! ❤️";
+        nextBtn.innerText = "Seni Seviyorum ❤️";
+        nextBtn.onclick = () => { alert("İyi ki varsın! ❤️"); };
+    }
+
+    updateDialog();
+</script>
+
+</body>
+</html>
