@@ -2,25 +2,120 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sana Bir Sürprizim Var ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sana Özel Bir Sürpriz ❤️</title>
     <style>
-        body { margin: 0; padding: 0; background: #fff0f3; font-family: 'Arial', sans-serif; overflow: hidden; display: flex; flex-direction: column; align-items: center; height: 100vh; }
-        #game-container { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
-        
-        /* NPC Karakter */
-        #npc { width: 200px; z-index: 10; transition: all 0.5s; margin-bottom: -10px; }
-        
-        /* Diyalog Kutusu */
-        #dialog-box { width: 90%; background: white; border: 4px solid #ffb1c1; border-radius: 20px; padding: 20px; box-sizing: border-box; z-index: 20; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        #text { font-size: 18px; color: #444; margin-bottom: 15px; min-height: 50px; text-align: center; }
-        #next-btn { background: #ff4d6d; color: white; border: none; padding: 10px 20px; border-radius: 50px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; }
+        /* TEMEL STİLLER (Mobil Uyumlu) */
+        body {
+            margin: 0; padding: 0;
+            background-color: #fce4ec; /* Toz Pembe Arka Plan */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Taşmayı engelle */
+            display: flex; flex-direction: column; align-items: center;
+            height: 100vh; justify-content: flex-end; /* İçeriği alta hizala */
+        }
 
-        /* Oyun Alanı */
-        #heart-game { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; }
-        .heart { position: absolute; font-size: 40px; cursor: pointer; user-select: none; animation: float 3s linear forwards; }
-        @keyframes float { from { transform: translateY(100vh) scale(1); } to { transform: translateY(-10vh) scale(1.5); } }
-        #score { position: absolute; top: 20px; right: 20px; font-size: 24px; color: #ff4d6d; font-weight: bold; display: none; z-index: 30; }
+        /* OYUN ALANI */
+        #game-container {
+            position: relative;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            transition: all 0.5s ease;
+        }
+
+        /* NPC (KARAKTER) RESMİ */
+        #npc {
+            width: 70%; /* Telefondan girileceği için dikey ekrana uygun */
+            max-width: 350px;
+            z-index: 10;
+            transition: all 0.5s ease;
+            margin-bottom: -50px; /* Diyalog kutusuna biraz geçsin */
+            object-fit: contain; /* Resmi bozmadan sığdır */
+            /* filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); */ /* İstersen gölge ekle */
+        }
+
+        /* DİYALOG KUTUSU (Görsel Roman Stili) */
+        #dialog-box {
+            width: 90%;
+            max-width: 500px;
+            background-color: rgba(255, 255, 255, 0.9); /* Şeffaf beyaz */
+            border-radius: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 20;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 3px solid #ffb1c1; /* Hafif pembe kenarlık */
+            position: relative; /* Butonu içine hizalamak için */
+            overflow: hidden; /* Taşmaları engelle */
+        }
+
+        #text {
+            font-size: 1.1rem;
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 45px; /* Buton için yer bırak */
+            min-height: 70px; /* Mesaj değişirken kutu boyutu oynamasın */
+            text-align: center;
+        }
+
+        /* DEVAM ET BUTONU */
+        #next-btn {
+            background: #ff4d6d; /* Canlı Pembe Buton */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(255,128,171,0.3);
+            position: absolute; /* Diyalog kutusunun içine sabitle */
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%; /* Buton genişliği */
+            font-weight: bold;
+        }
+
+        #next-btn:active {
+            transform: translateX(-50%) scale(0.98);
+        }
+
+        /* KALPLER OYUNU ALANI (BAŞLANGIÇTA GİZLİ) */
+        #heart-game {
+            display: none;
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 5;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 40px;
+            cursor: pointer;
+            user-select: none;
+            animation: float 3s linear forwards; /* Yukarı süzülme animasyonu */
+        }
+
+        @keyframes float {
+            from { transform: translateY(110vh) scale(1); opacity: 1; }
+            to { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        /* PUAN SAYACI */
+        #score {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #ff4d6d;
+            font-weight: bold;
+            display: none;
+            z-index: 30;
+        }
+
     </style>
 </head>
 <body>
@@ -37,6 +132,13 @@
 </div>
 
 <script>
+    // SES NESNELERİNİ OLUŞTUR (Dosyalar GitHub'a yüklenmeli)
+    const backgroundMusic = new Audio('muzik.mp3');
+    backgroundMusic.loop = true; // Müziğin sürekli çalması için
+
+    const heartSound = new Audio('tik.mp3'); // Kalbe tıklayınca çalacak ses efekti
+
+    // SENİN DİYALOGLARIN LİSTESİ
     const dialogs = [
         "Selam sevgilim! Sonunda geldin. 😊",
         "Bu siteyi sadece senin için tasarladım...",
@@ -54,64 +156,109 @@
     const heartGame = document.getElementById('heart-game');
     const scoreEl = document.getElementById('score');
 
+    // Harf Harf Yazma Efekti
+    let typingTimer;
+    function typeWriter(text, i) {
+        if (i < text.length) {
+            textEl.innerHTML += text.charAt(i);
+            i++;
+            typingTimer = setTimeout(() => typeWriter(text, i), 50); // Hızı buradan ayarlayabilirsin
+        }
+    }
+
     function updateDialog() {
         if (currentStep < dialogs.length) {
-            textEl.innerText = dialogs[currentStep];
+            textEl.innerHTML = ""; // Önceki metni temizle
+            typeWriter(dialogs[currentStep], 0); // Yeni metni harf harf yazdır
         } else {
+            // Diyalog bitti, oyuna geçiş yap
             startGame();
         }
     }
 
+    // Butona tıklandığında sonraki mesajı getir
     nextBtn.onclick = () => {
+        // İlk tıklamada müziği başlat
+        if (currentStep === 0) {
+            backgroundMusic.play().catch(e => console.log("Müzik çalınamadı:", e));
+        }
         currentStep++;
         updateDialog();
     };
 
+    // Kalp Toplama Oyununu Başlat
     function startGame() {
-        dialogBox.style.display = 'none';
+        dialogBox.style.display = 'none'; // Diyalog kutusunu gizle
         npc.style.width = '100px'; // Karakteri küçültüp köşeye alalım
         npc.style.position = 'absolute';
         npc.style.bottom = '10px';
         npc.style.left = '10px';
-        heartGame.style.display = 'block';
-        scoreEl.style.display = 'block';
+        npc.style.marginBottom = "0";
+        heartGame.style.display = 'block'; // Oyun alanını göster
+        scoreEl.style.display = 'block'; // Puan sayacını göster
         
+        // Rastgele kalpler oluştur
         const interval = setInterval(() => {
             if(score >= 10) {
                 clearInterval(interval);
-                finishGame();
+                finishGame(); // 10 kalp toplanınca oyunu bitir
                 return;
             }
             createHeart();
-        }, 800);
+        }, 800); // Kalplerin gelme sıklığı
     }
 
     function createHeart() {
         const heart = document.createElement('div');
         heart.className = 'heart';
         heart.innerHTML = '❤️';
+        // Kalbi rastgele bir yere yerleştir (kenarlardan taşmayacak şekilde)
         heart.style.left = Math.random() * 80 + 10 + '%';
+        
+        // Kalbe tıklanınca puan artır
         heart.onclick = () => {
             score++;
             scoreEl.innerText = `Kalpler: ${score}/10`;
-            heart.remove();
+            heart.remove(); // Kalbi ekrandan sil
+            
+            // Tıklama ses efektini çal
+            heartSound.play().catch(e => console.log("Ses efekti çalınamadı:", e));
         };
+        
         heartGame.appendChild(heart);
-        setTimeout(() => heart.remove(), 3000);
+        
+        // 3 saniye sonra kalp kendiliğinden kaybolsun (tıklanmazsa)
+        setTimeout(() => {
+            if (heart.parentNode) { // Eğer kalp hala ekrandaysa
+                heart.remove();
+            }
+        }, 3000);
     }
 
+    // Oyun Bittiğinde Ekrana Çıkacak Son Mesaj
     function finishGame() {
-        heartGame.innerHTML = "";
+        heartGame.innerHTML = ""; // Kalan kalpleri temizle
+        
+        // Karakteri tekrar büyütüp ortaya alalım
         npc.style.width = "250px";
         npc.style.left = "50%";
         npc.style.transform = "translateX(-50%)";
-        dialogBox.style.display = 'block';
-        textEl.innerText = "Harikaydı! Bütün kalpleri topladın. Ama bil ki; asıl kalbim her zaman sende... Seni çok seviyorum! ❤️";
+        
+        dialogBox.style.display = 'block'; // Diyalog kutusunu tekrar göster
+        
+        textEl.innerHTML = ""; // Önceki metni temizle
+        // Bitiş mesajını harf harf yazdır
+        const endMessage = "Harikaydı! Bütün kalpleri topladın. Ama bil ki; asıl kalbim her zaman sende... Seni çok seviyorum! ❤️";
+        typeWriter(endMessage, 0);
+
+        // Buton metnini ve işlevini değiştir
         nextBtn.innerText = "Seni Seviyorum ❤️";
         nextBtn.onclick = () => { alert("İyi ki varsın! ❤️"); };
     }
 
+    // Sayfa yüklendiğinde ilk mesajı getir
     updateDialog();
+
 </script>
 
 </body>
